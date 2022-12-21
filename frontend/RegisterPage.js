@@ -20,9 +20,14 @@ const Register = () => {
   }
 
   const signup = async () => {
-
-  axios.post(uri).then(function (response){
-      setData(data.header.item);
+  axios.post("http://127.0.0.1:8080/signUp", {firstname:firstname, lastname:lastname, username:username, password:password, phoneNumber:phoneNumber,favoil:[]})
+  .then(function (response){
+      if(response.data){
+        navigation.navigate("Login")   
+      }
+      else{
+        alert("ชื่อผู้ใช้นี้ถูกใช้งานไปแล้ว")
+      }
   });
   }
 

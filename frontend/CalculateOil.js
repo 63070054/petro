@@ -1,16 +1,23 @@
 import { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Image } from 'react-native';
 import { useFonts, Kanit_400Regular } from '@expo-google-fonts/kanit';
-import { Input, Button } from '@ui-kitten/components';
+import { Input, IndexPath, Button, Layout, Select, SelectItem} from '@ui-kitten/components';
 
 
 const Calculate = () => {
-  const [firstname, setFirstname] = useState('');
-  const [lastname, setLastname] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [start, setStart] = useState('');
+  const [end, setEnd] = useState('');
+  const [distance, setDistance] = useState('');
   const [alert, setAlert] = useState('');
+  const [selectedIndex, setSelectedIndex] = useState(new IndexPath(0));
+  const data = [
+    'อาหาร',
+    'ท่องเที่ยว',
+    'พักผ่อน',
+    'เรียน/ทำงาน',
+    'อื่น ๆ'
+];
+const displayValue = data[selectedIndex.row];
   let [fontsLoaded] = useFonts({
     Kanit_400Regular
   });
@@ -19,34 +26,57 @@ const Calculate = () => {
     return null;
   }
 
-  const signup = async () => {
+  const calculate = async () => {
+    axios.post("http://127.0.0.1:8080/calculate", {start:start, end:end, })
+  .then(function (response){
+      if(response.data){
+        navigation.navigate("Login")   
+      }
+      else{
+        alert("ชื่อผู้ใช้นี้ถูกใช้งานไปแล้ว")
+      }
 
-  }
+  })}
 
   return (
     <View style={styles.container}>
       <Text style={{ fontFamily: 'Kanit_400Regular', fontSize: 60, color: '#E84545' , fontWeight: 'bold'}}>PETRO</Text>
+      <View style={styles.row}>
+      <Text style={{ fontFamily: 'Kanit_400Regular', fontSize: 20, color: '#E84545' , fontWeight: 'bold'}}>ชนิดน้ำมัน: </Text>
+                    <Layout level='1'>
+                        <Select
+                            value={displayValue}
+                            selectedIndex={selectedIndex}
+                            onSelect={index => setSelectedIndex(index)}>
+                            <SelectItem title='อาหาร' />
+                            <SelectItem title='ท่องเที่ยว' />
+                            <SelectItem title='พักผ่อน' />
+                            <SelectItem title='เรียน/ทำงาน' />
+                            <SelectItem title='อื่น ๆ' />
+                        </Select>
+                    </Layout>
+            </View>
+      <View style={{ marginTop: 15 }}>
+      <Image source={require('../assets/map.png')} style={{ width: 150, height: 150 }} />
+      </View>
       <View style={{ marginTop: 25 }}>
         <Text style={styles.fontEngInputHeader}>จุดเริ่มต้น</Text>
-        <Input style={styles.fontEngInput} onChangeText={text => setUsername(text)} />
+        <Input style={styles.fontEngInput} onChangeText={text => setStart(text)} />
       </View>
       <View style={{ marginTop: 15 }}>
         <Text style={styles.fontEngInputHeader}>ปลายทาง</Text>
-        <Input secureTextEntry={true} style={styles.fontEngInput} onChangeText={text => setPassword(text)} />
+        <Input style={styles.fontEngInput} onChangeText={text => setEnd(text)} />
       </View>
       <View style={{ marginTop: 15 }}>
-        <Text style={{ fontFamily: 'Kanit_400Regular', fontSize: 30, color: '#E84545' , fontWeight: 'bold'}}>น้ำมัน A</Text>
+        <Text style={styles.fontEngInputHeader}>ระยะทาง</Text>
+        <Input style={styles.fontEngInput} onChangeText={text => setDistance(text)} />
       </View>
-      <View style={[{ marginTop: 15 }, styles.row]}>
-        <Text style={styles.fontEngInputHeader}>ระยะทาง: </Text>
-        <Text style={styles.fontEngInputHeader}>XXX</Text>
-      </View>
+      <Button style={[styles.fontEng, styles.buttonStyle, { margin: 15 }]} onPress={calculate}>{evaProps => <Text {...evaProps} style={{ color: "#ffffff", fontFamily: 'Kanit_400Regular', }}>คำนวณค่าน้ำมัน</Text>}</Button>
+      
+      
       <View style={{ marginTop: 15 }}>
-        <Text style={styles.fontEngInputHeader}>Phone</Text>
-        <Input style={styles.fontEngInput} onChangeText={text => setPhoneNumber(text)} />
+        <Text style={{ fontFamily: 'Kanit_400Regular', fontSize: 20, color: '#E84545' , fontWeight: 'bold'}}>ค่าน้ำมัน: </Text>
       </View>
-      <Text style={[styles.fontTh, { color: '#F73C3C', marginTop: 15 }]}>{alert}</Text>
-      <Button style={[styles.fontEng, styles.buttonStyle, { margin: 10 }]} onPress={signup}>{evaProps => <Text {...evaProps} style={{ color: "#ffffff", fontFamily: 'Kanit_400Regular', }}>Sign Up</Text>}</Button>
     </View>
   );
 };
@@ -78,6 +108,14 @@ const styles = StyleSheet.create({
     borderRadius: '30px',
     width: 280
   },
+  calInput: {
+    fontFamily: 'Kanit_400Regular',
+    fontSize: 14,
+    color: 'black',
+    // backgroundColor: '#FFFFFF',
+    borderRadius: '30px',
+    width: 80
+  },
   fontTh: {
     fontFamily: 'Kanit_400Regular',
     fontSize: 14,
@@ -87,7 +125,7 @@ const styles = StyleSheet.create({
     borderColor: 'transparent',
     borderWidth: 0,
     borderRadius: "9000px",
-    width: 240
+    width: 200
   },
   logo: {
     justifyContent: 'flex-start',
@@ -98,6 +136,7 @@ const styles = StyleSheet.create({
     // top: '-50px'
   },
   row: {
+    justifyContent: 'center',
     textAlign: 'center',
     flexDirection: 'row',
     width: '100%',

@@ -14,13 +14,13 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   return (
     <ApplicationProvider {...eva} theme={eva.light}>
-      <NavigationContainer>
+      {/* <NavigationContainer>
         <Stack.Navigator screenOptions={{headerShown:false}}>
           <Stack.Screen name='Login' component={LoginPage} />
           <Stack.Screen name='Register' component={Register}/>
         </Stack.Navigator>
-      </NavigationContainer>
-      {/* <Calculate></Calculate> */}
+      </NavigationContainer> */}
+      <Calculate></Calculate>
     </ApplicationProvider>
   );
 }
