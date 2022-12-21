@@ -1,69 +1,72 @@
-import React, { useState, useEffect, } from 'react';
-import { SafeAreaView, StyleSheet, ScrollView, View, StatusBar, FlatList, TouchableOpacity, TextInput, Image } from 'react-native';
-import { Layout, Tab, TabView, Text, Input, Button, Card, IndexPath, Select, SelectItem, Icon } from '@ui-kitten/components';
+import { useEffect, useState } from 'react';
+import axios from "axios";
+import { FlatList } from 'react-native-web';
+import { Button } from '@ui-kitten/components';
 import { useFonts, Inter_900Black } from '@expo-google-fonts/inter';
 import { OpenSans_500Medium, } from '@expo-google-fonts/open-sans';
 import { Kanit_400Regular } from '@expo-google-fonts/kanit';
-// import BottomNavigtor from '../navigation/BottomNavigator';
-const data = [
-  { id: 1, name: 'John', email: 'john@gmail.com' },
-  { id: 2, name: 'Bob', email: 'bob@gmail.com' },
-  { id: 3, name: 'Mei', email: 'mei@gmail.com' },
-  { id: 4, name: 'Steve', email: 'steve@gmail.com' }
-]
+import { SafeAreaView, StyleSheet, ScrollView, View, StatusBar, TouchableOpacity, TextInput, Image } from 'react-native';
+import { Layout, Tab, TabView, Text, Input, Card, IndexPath, Select, SelectItem, Icon } from '@ui-kitten/components';
+const convert = require("xml-js");
+
 const ShowOilPrice = ({ navigation }) => {
-  // const [isLoading, setLoading] = useState(true);
-  // const [data, setData] = useState([]);
-  // console.log(data);
-  // useEffect(() => {
-  //   fetch('https://raw.githubusercontent.com/adhithiravi/React-Hooks-Examples/master/testAPI.json')
-  //     .then((response) => response.json())
-  //     .then((json) => setData(json))
-  //     .catch((error) => console.error(error))
-  //     .finally(() => setLoading(false));
-  // }, []);
-  const [selectedFilter, setSelectedFilter] = useState(new IndexPath(0));
+  const [oils, setOils] = useState([]);
+  useEffect(() => {
+    const uri = "https://crmmobile.bangchak.co.th/webservice/oil_price.aspx"
+    axios.get(uri).then(function (response) {
+      const data = JSON.parse(convert.xml2json(response.data, { compact: true, spaces: 2 }))
+      setOils(data.header.item);
+    });
+  }, [!oils]);
 
   let [fontsLoaded] = useFonts({
     Inter_900Black, OpenSans_500Medium, Kanit_400Regular
-
   });
 
   if (!fontsLoaded) {
     return null;
   }
 
-  const filter = [
-    'ทั้งหมด',
-    'อาหาร',
-    'ท่องเที่ยว',
-    'พักผ่อน',
-    'เรียน/ทำงาน',
-    'อื่น ๆ'
-  ];
-
-  const displayValue = filter[selectedFilter.row];
-
+  const renderItem = ({ item }) => {
+    return (
+      <View style={[styles.row, styles.card]}>
+        <View style={[styles.column1]}>
+          <Text style={[{ color: 'white', fontSize: '25px' }]}>♡</Text>
+        </View>
+        <View style={[styles.column3, { padding: 5 }]}>
+          <Text style={[styles.fontTh, { color: 'white', fontSize: '18px' }]}>{item.type._text}</Text>
+        </View>
+        <View style={[styles.column3, { padding: 5 }]}>
+          <Text style={[styles.fontTh, { color: 'white', fontSize: '13px' }]}>{item.yesterday._text}</Text>
+        </View>
+        <View style={[styles.column3, { padding: 5 }]}>
+          <Text style={[styles.fontTh, { color: 'white', fontSize: '13px' }]}>{item.today._text}</Text>
+        </View>
+        <View style={[styles.column1, { padding: 5 }]}>
+          <Text style={[styles.fontTh, { color: 'white', fontSize: '13px' }]}>{parseInt(item.yesterday._text) - parseInt(item.today._text)}</Text>
+        </View>
+      </View>
+    )
+  }
   return (
-    <View style={[styles.MainContainer, { backgroundColor: 'white' }]}>
+    <View style={[styles.MainContainer]}>
       <ScrollView style={styles.scrollView}>
-        <Layout style={[styles.tabContainer]}>
+        <Layout style={[styles.tabContainer, { backgroundColor: 'black' }]}>
           <View style={styles.containerFilter}>
             <Text category='h1' style={[styles.fontTh, { color: '#903749', paddingRight: '50px' }]}>ราคานํ้ามัน</Text>
-            <Icon
-              style={[styles.icon, { marginTop: 0 }]}
-              name='funnel-outline' />
             <Layout level='1'>
-              <Select
-                selectedIndex={selectedFilter}
-                value={displayValue}
-                onSelect={index => filterChange(index)}>
+              <Select>
                 <SelectItem title='ทั้งหมด' />
-                <SelectItem title='อาหาร' />
-                <SelectItem title='ท่องเที่ยว' />
-                <SelectItem title='พักผ่อน' />
-                <SelectItem title='เรียน/ทำงาน' />
-                <SelectItem title='อื่น ๆ' />
+                <SelectItem title='Hi Premium Diesel S B7' />
+                <SelectItem title='Diesel S B7' />
+                <SelectItem title='HI DIESEL S' />
+                <SelectItem title='HI DIESEL B20 S' />
+                <SelectItem title='Hi Premium 97 Gasohol 95' />
+                <SelectItem title='Gasohol E85 S EVO' />
+                <SelectItem title='Gasohol E20 S EVO' />
+                <SelectItem title='Gasohol 91 S EVO' />
+                <SelectItem title='Gasohol 95 S EVO' />
+
               </Select>
             </Layout>
           </View>
@@ -84,45 +87,24 @@ const ShowOilPrice = ({ navigation }) => {
               <View style={[styles.column1]}>
                 <Text style={[styles.fontTh, { color: '#4542C1', fontSize: '18px' }]}></Text>
               </View>
-              {/* <FlatList
-                      data={data.articles}
-                      keyExtractor={({ id }, index) => id}
-                      renderItem={({ item }) => (
-                        <Text>{item.id + '. ' + item.title}</Text>
-                      )}
-                    /> */}
-              {data.map((item, index) =>
-                <View style={[styles.row, styles.card]}>
-                  <View style={[styles.column1]}>
-                    <Icon style={[styles.icon, {width:26, height:26}]} fill='white' name='heart'/>
-                  </View>
-                  <View style={[styles.column3, { padding: 5 }]}>
-                    <Text style={[styles.fontTh, { color: 'white', fontSize: '18px' }]}>{item.id}</Text>
-                  </View>
-                  <View style={[styles.column3, { padding: 5 }]}>
-                    <Text style={[styles.fontTh, { color: 'white', fontSize: '13px' }]}>{item.name}</Text>
-                  </View>
-                  <View style={[styles.column3, { padding: 5 }]}>
-                    <Text style={[styles.fontTh, { color: 'white', fontSize: '13px' }]}>{item.email}</Text>
-                  </View>
-                  <View style={[styles.column1, { padding: 5 }]}>
-                    <Text style={[styles.fontTh, { color: 'white', fontSize: '10px' }]}>80.00</Text>
-                  </View>
-                </View>
-              )}
             </View>
+            <FlatList data={oils} renderItem={renderItem}></FlatList>
+
           </View>
+
         </Layout>
       </ScrollView>
-      {/* <View style={styles.bottomView} >
-        <BottomNavigtor navigation={navigation} />
-      </View> */}
     </View>
 
-  );
-};
-
+  )
+}
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    //   justifyContent: 'center',
+  },
   tabContainer: {
     height: '100%',
     width: '100%',
@@ -163,7 +145,7 @@ const styles = StyleSheet.create({
   containerFilter: {
     alignItems: 'center',
     // height: '100%', width: '100%' ,
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
     flexDirection: 'row',
   },
   card: {
@@ -181,6 +163,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     width: '100%',
+    height: '70px'
   },
   column3: {
     width: "25%"
