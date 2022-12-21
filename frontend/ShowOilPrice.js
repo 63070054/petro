@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react';
 import axios from "axios";
 import { FlatList } from 'react-native-web';
 import { Button } from '@ui-kitten/components';
-import { useFonts, Inter_900Black } from '@expo-google-fonts/inter';
-import { OpenSans_500Medium, } from '@expo-google-fonts/open-sans';
 import { Kanit_400Regular } from '@expo-google-fonts/kanit';
 import { SafeAreaView, StyleSheet, ScrollView, View, StatusBar, TouchableOpacity, TextInput, Image } from 'react-native';
 import { Layout, Tab, TabView, Text, Input, Card, IndexPath, Select, SelectItem, Icon } from '@ui-kitten/components';

@@ -3,11 +3,14 @@ import { StyleSheet, View } from 'react-native';
 import { Input, Button, Text } from '@ui-kitten/components';
 import { useFonts, Kanit_400Regular } from '@expo-google-fonts/kanit';
 import Register from './RegisterPage';
+import axios from 'axios';
+import ShowOilPrice from './ShowOilPrice';
 
 const LoginPage = ({ navigation }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [alert, setAlert] = useState('');
+    const [isSuccess, setIsSuccess] = useState(false);
     let [fontsLoaded] = useFonts({
         Kanit_400Regular
     });
@@ -18,9 +21,14 @@ const LoginPage = ({ navigation }) => {
     var user
 
     const login = () => {
-        cosnoel.log('login')
-    }
-
+    axios.get("http://127.0.0.1:8080/signIn/"+username+"/"+password)         
+    .then(function (response){             
+        setIsSuccess(response.data);             
+        console.log(response.data);             
+        if(isSuccess){                 
+            // navigation.navigate("ShowOilPrice")             
+        }         
+    });}
 
     return (
         <View style={styles.container}>
