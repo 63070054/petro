@@ -21,6 +21,9 @@ const Register = () => {
 
   const signup = async () => {
 
+  axios.post(uri).then(function (response){
+      setData(data.header.item);
+  });
   }
 
   return (

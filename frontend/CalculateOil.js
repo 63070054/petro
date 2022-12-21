@@ -27,20 +27,19 @@ const Calculate = () => {
     <View style={styles.container}>
       <Text style={{ fontFamily: 'Kanit_400Regular', fontSize: 60, color: '#E84545' , fontWeight: 'bold'}}>PETRO</Text>
       <View style={{ marginTop: 25 }}>
-        <Text style={styles.fontEngInputHeader}>Username</Text>
+        <Text style={styles.fontEngInputHeader}>จุดเริ่มต้น</Text>
         <Input style={styles.fontEngInput} onChangeText={text => setUsername(text)} />
       </View>
       <View style={{ marginTop: 15 }}>
-        <Text style={styles.fontEngInputHeader}>Password</Text>
+        <Text style={styles.fontEngInputHeader}>ปลายทาง</Text>
         <Input secureTextEntry={true} style={styles.fontEngInput} onChangeText={text => setPassword(text)} />
       </View>
       <View style={{ marginTop: 15 }}>
-        <Text style={styles.fontEngInputHeader}>Firstname</Text>
-        <Input style={styles.fontEngInput} onChangeText={text => setFirstname(text)} />
+        <Text style={{ fontFamily: 'Kanit_400Regular', fontSize: 30, color: '#E84545' , fontWeight: 'bold'}}>น้ำมัน A</Text>
       </View>
-      <View style={{ marginTop: 15 }}>
-        <Text style={styles.fontEngInputHeader}>Lastname</Text>
-        <Input style={styles.fontEngInput} onChangeText={text => setLastname(text)} />
+      <View style={[{ marginTop: 15 }, styles.row]}>
+        <Text style={styles.fontEngInputHeader}>ระยะทาง: </Text>
+        <Text style={styles.fontEngInputHeader}>XXX</Text>
       </View>
       <View style={{ marginTop: 15 }}>
         <Text style={styles.fontEngInputHeader}>Phone</Text>
@@ -97,7 +96,13 @@ const styles = StyleSheet.create({
     height: 30,
     alignSelf: 'flex-start',
     // top: '-50px'
-  }
+  },
+  row: {
+    textAlign: 'center',
+    flexDirection: 'row',
+    width: '100%',
+    height: '10'
+},
 });
 
 export default Calculate
