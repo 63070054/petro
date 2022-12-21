@@ -52,7 +52,7 @@ const MemoRoute = ({ navigation }) => {
       <ScrollView style={styles.scrollView}>
         <Layout style={[styles.tabContainer, { backgroundColor: 'white' }]}>
           <View style={styles.containerFilter}>
-            <Text category='h1' style={[styles.fontTh, { color: '#903749', paddingRight: '50px' }]}>เส้นทางที่บันทึก</Text>
+            <Text category='h1' style={[styles.fontTh, { color: '#903749' }]}>เส้นทางที่บันทึก</Text>
           </View>
           <View style={styles.containerCardparty} >
             <FlatList data={oils} renderItem={renderItem} ></FlatList>
