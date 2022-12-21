@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react';
+import React, { useState, useEffect, } from 'react';
 import axios from "axios";
 import { FlatList } from 'react-native-web';
 import { Button } from '@ui-kitten/components';
+import { useFonts, Inter_900Black } from '@expo-google-fonts/inter';
+import { OpenSans_500Medium, } from '@expo-google-fonts/open-sans';
 import { Kanit_400Regular } from '@expo-google-fonts/kanit';
 import { SafeAreaView, StyleSheet, ScrollView, View, StatusBar, TouchableOpacity, TextInput, Image } from 'react-native';
 import { Layout, Tab, TabView, Text, Input, Card, IndexPath, Select, SelectItem, Icon } from '@ui-kitten/components';
@@ -9,6 +11,7 @@ const convert = require("xml-js");
 
 const ShowOilPrice = ({ navigation }) => {
   const [oils, setOils] = useState([]);
+  const [selectedFilter, setSelectedFilter] = useState(new IndexPath(0));
   useEffect(() => {
     const uri = "https://crmmobile.bangchak.co.th/webservice/oil_price.aspx"
     axios.get(uri).then(function (response) {
@@ -16,6 +19,28 @@ const ShowOilPrice = ({ navigation }) => {
       setOils(data.header.item);
     });
   }, [!oils]);
+
+
+
+  // useEffect(() => {
+  //   if (selectedFilter.row == 1) {
+  //     let data = data[0].filter(item => item.type == "น้ำมนที่ชื่นชอบ")
+  //     setData(data)
+  //   }
+  //   else {
+  //     let data = data[0]
+  //     setData(data)
+  //   }
+  // }, [selectedFilter])
+  // const filter = [
+  //   'น้ำมนที่ชื่นชอบ',
+  //   'ทั้งหมด',
+  // ];
+  // const displayValue = filter[selectedFilter.row];
+  // const filterChange = async (index) => {
+  //   setSelectedFilter(index)
+  // }
+
 
   let [fontsLoaded] = useFonts({
     Inter_900Black, OpenSans_500Medium, Kanit_400Regular
@@ -54,22 +79,13 @@ const ShowOilPrice = ({ navigation }) => {
             <Text category='h1' style={[styles.fontTh, { color: '#903749', paddingRight: '50px' }]}>ราคานํ้ามัน</Text>
             <Layout level='1'>
               <Select>
+                <SelectItem title='น้ำมนที่ชื่นชอบ' />
                 <SelectItem title='ทั้งหมด' />
-                <SelectItem title='Hi Premium Diesel S B7' />
-                <SelectItem title='Diesel S B7' />
-                <SelectItem title='HI DIESEL S' />
-                <SelectItem title='HI DIESEL B20 S' />
-                <SelectItem title='Hi Premium 97 Gasohol 95' />
-                <SelectItem title='Gasohol E85 S EVO' />
-                <SelectItem title='Gasohol E20 S EVO' />
-                <SelectItem title='Gasohol 91 S EVO' />
-                <SelectItem title='Gasohol 95 S EVO' />
-
               </Select>
             </Layout>
           </View>
           <View style={styles.containerCardparty}>
-            <View style={[styles.row, styles.card, { backgroundColor: '#2B2E4A' }]}>
+            <View style={[styles.row, styles.card, { backgroundColor: '#2B2E4A', height: '80px' }]}>
               <View style={[styles.column1]}>
                 <Text style={[styles.fontTh, { color: '#4542C1', fontSize: '18px' }]}></Text>
               </View>
@@ -147,13 +163,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   card: {
-    padding: 10,
+    padding: 5,
     backgroundColor: '#903749',
     borderRadius: "15px",
     borderColor: "transparent",
   },
   containerCardparty: {
-    width: '90%',
+    width: '80%',
   },
   row: {
     flexWrap: "wrap",
@@ -161,7 +177,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     width: '100%',
-    height: '70px'
+    height: '85px'
   },
   column3: {
     width: "25%"
