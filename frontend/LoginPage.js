@@ -21,7 +21,7 @@ const LoginPage = ({ navigation }) => {
     var user
 
     const login = () => {
-    axios.get("http://127.0.0.1:8080/signIn/"+username+"/"+password)         
+    axios.get("http://127.0.0.1:8080/signIn", {username:username, password:password})         
     .then(function (response){             
         setIsSuccess(response.data);             
         console.log(response.data);             

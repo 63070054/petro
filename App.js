@@ -8,6 +8,7 @@ import Oils from './frontend/Oils';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Calculate from './frontend/CalculateOil';
+import ShowOilPrice from './frontend/ShowOilPrice';
 
 const Stack = createNativeStackNavigator();
 
@@ -20,7 +21,8 @@ export default function App() {
           <Stack.Screen name='Register' component={Register}/>
         </Stack.Navigator>
       </NavigationContainer> */}
-      <Calculate></Calculate>
+      {/* <Calculate></Calculate> */}
+      <ShowOilPrice></ShowOilPrice>
     </ApplicationProvider>
   );
 }

@@ -2,14 +2,17 @@ import { useState } from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import { useFonts, Kanit_400Regular } from '@expo-google-fonts/kanit';
 import { Input, IndexPath, Button, Layout, Select, SelectItem} from '@ui-kitten/components';
+import axios from 'axios';
 
 
 const Calculate = () => {
-  const [start, setStart] = useState('');
-  const [end, setEnd] = useState('');
-  const [distance, setDistance] = useState('');
+  const [distance, setDistance] = useState(0);
   const [alert, setAlert] = useState('');
-  const [selectedIndex, setSelectedIndex] = useState(new IndexPath(0));
+  const [oilPrice, setOilPrice] = useState('');
+  const [selectedIndex, setSelectedIndex] = useState('');
+  const [rateOfWaste, setRateOfWaste] = useState('');
+  const [price, setPrice] = useState('');
+  
   const data = [
     'อาหาร',
     'ท่องเที่ยว',
@@ -27,22 +30,17 @@ const displayValue = data[selectedIndex.row];
   }
 
   const calculate = async () => {
-    axios.post("http://127.0.0.1:8080/calculate", {start:start, end:end, })
+    axios.post("http://127.0.0.1:8080/calculate", {distance:distance, oil_Price:40, rate_of_waste:14 })
   .then(function (response){
-      if(response.data){
-        navigation.navigate("Login")   
-      }
-      else{
-        alert("ชื่อผู้ใช้นี้ถูกใช้งานไปแล้ว")
-      }
-
+    // setPrice(response.data)
+    console.log(response.data)
   })}
 
   return (
     <View style={styles.container}>
       <Text style={{ fontFamily: 'Kanit_400Regular', fontSize: 60, color: '#E84545' , fontWeight: 'bold'}}>PETRO</Text>
       <View style={styles.row}>
-      <Text style={{ fontFamily: 'Kanit_400Regular', fontSize: 20, color: '#E84545' , fontWeight: 'bold'}}>ชนิดน้ำมัน: </Text>
+      <Text style={{ fontFamily: 'Kanit_400Regular', fontSize: 20, color: '#E84545'}}>ชนิดน้ำมัน: </Text>
                     <Layout level='1'>
                         <Select
                             value={displayValue}
@@ -58,14 +56,6 @@ const displayValue = data[selectedIndex.row];
             </View>
       <View style={{ marginTop: 15 }}>
       <Image source={require('../assets/map.png')} style={{ width: 150, height: 150 }} />
-      </View>
-      <View style={{ marginTop: 25 }}>
-        <Text style={styles.fontEngInputHeader}>จุดเริ่มต้น</Text>
-        <Input style={styles.fontEngInput} onChangeText={text => setStart(text)} />
-      </View>
-      <View style={{ marginTop: 15 }}>
-        <Text style={styles.fontEngInputHeader}>ปลายทาง</Text>
-        <Input style={styles.fontEngInput} onChangeText={text => setEnd(text)} />
       </View>
       <View style={{ marginTop: 15 }}>
         <Text style={styles.fontEngInputHeader}>ระยะทาง</Text>

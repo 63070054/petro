@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useFonts, Kanit_400Regular } from '@expo-google-fonts/kanit';
 import { Input, Button } from '@ui-kitten/components';
+import axios from 'axios';
 
 
 const Register = () => {
