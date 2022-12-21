@@ -4,7 +4,7 @@ import { useFonts, Kanit_400Regular } from '@expo-google-fonts/kanit';
 import { Input, Button } from '@ui-kitten/components';
 
 
-const Register = () => {
+const Calculate = () => {
   const [firstname, setFirstname] = useState('');
   const [lastname, setLastname] = useState('');
   const [username, setUsername] = useState('');
@@ -25,9 +25,8 @@ const Register = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={{ fontFamily: 'Kanit_400Regular', fontSize: 60, color: '#E84545' , fontWeight: 'bold'}}>REGISTER</Text>
+      <Text style={{ fontFamily: 'Kanit_400Regular', fontSize: 60, color: '#E84545' , fontWeight: 'bold'}}>PETRO</Text>
       <View style={{ marginTop: 25 }}>
-      
         <Text style={styles.fontEngInputHeader}>Username</Text>
         <Input style={styles.fontEngInput} onChangeText={text => setUsername(text)} />
       </View>
@@ -101,4 +100,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Register
+export default Calculate

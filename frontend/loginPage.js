@@ -3,6 +3,9 @@ import { StyleSheet, View } from 'react-native';
 import { Input, Button, Text } from '@ui-kitten/components';
 import { useFonts, Kanit_400Regular } from '@expo-google-fonts/kanit';
 import Register from './RegisterPage';
+const convert = require("xml-js");
+
+
 
 const LoginPage = ({ navigation }) => {
     const [username, setUsername] = useState('');
@@ -20,11 +23,21 @@ const LoginPage = ({ navigation }) => {
     const login = () => {
         cosnoel.log('login')
     }
-
+const Oils = ({ navigation }) => {
+    useEffect(()=>{
+        const uri = "https://crmmobile.bangchak.co.th/webservice/oil_price.aspx"
+        axios.get(uri).then(function (response){
+            const data = JSON.parse(convert.xml2json(response.data, {compact:true, spaces:2}))
+            console.log(data.header.item)
+            console.log("ราคาน้ำมัน " + data.header.item[0].type._text + " เมื่อวาน : " + data.header.item[0].yesterday._text)
+            console.log("ราคาน้ำมัน " + data.header.item[0].type._text + " วันนี้ : " + data.header.item[0].today._text)
+        });
+    })
+}
 
     return (
         <View style={styles.container}>
-            <Text style={{ fontFamily: 'Kanit_400Regular', fontSize: 70, color: '#E84545' }}>Petro</Text>
+            <Text style={{ fontFamily: 'Kanit_400Regular', fontSize: 80, fontWeight: 'bold', color: '#E84545' }}>Petro</Text>
             <View style={{ marginTop: 25 }}>
                 <Text style={styles.fontEngInputHeader} >Username</Text>
                 <Input style={[styles.fontEng, styles.fontEngInput]} value={username} onChangeText={text => setUsername(text)} />
