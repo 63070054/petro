@@ -26,7 +26,7 @@ const LoginPage = ({ navigation }) => {
         setIsSuccess(response.data);             
         console.log(response.data);             
         if(isSuccess){                 
-            // navigation.navigate("ShowOilPrice")             
+            navigation.navigate("ShowOilPrice")             
         }         
     });}
 
