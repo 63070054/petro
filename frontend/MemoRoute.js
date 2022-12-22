@@ -29,8 +29,8 @@ const MemoRoute = ({ navigation }) => {
 
   const renderItem = ({ item }) => {
     return (
-      <View style={[styles.row, styles.card]} >
-        <View style={[styles.column2, { padding: 5 }]}>
+      <View style={[styles.row, styles.card, ]} >
+        <View style={[styles.column2, { padding: 5 ,}]}>
             <Image source={require('../assets/map.png')} style={{ width: "50px", height: '50px', aspectRatio: "1/1", objectFit: "cover" }} />
             <Text style={[styles.fontTh, { color: 'white', fontSize: '10px' }]}>{item.type._text}</Text>
         </View>
@@ -48,7 +48,7 @@ const MemoRoute = ({ navigation }) => {
   return (
     <View style={[styles.MainContainer]}>
       <ScrollView style={styles.scrollView}>
-        <Layout style={[styles.tabContainer, { backgroundColor: 'white' }]}>
+        <Layout style={[styles.tabContainer, { backgroundColor: '#2B2E4A' }]}>
           <View style={styles.containerFilter}>
             <Text category='h1' style={[styles.fontTh, { color: '#903749' }]}>เส้นทางที่บันทึก</Text>
           </View>
@@ -67,13 +67,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     //   justifyContent: 'center',
+    
   },
   tabContainer: {
     height: '100%',
     width: '100%',
     alignItems: 'center',
     backgroundColor: 'transparent',
-    paddingTop: '20px'
+    paddingTop: '20px',
+    
   },
   fontEng: {
     fontFamily: 'Kanit_400Regular',
@@ -126,7 +128,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     width: '100%',
-    height: '85px'
+    height: '85px',
   },
   column3: {
     width: "40%",
