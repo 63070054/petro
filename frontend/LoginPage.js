@@ -21,14 +21,20 @@ const LoginPage = ({ navigation }) => {
     var user
 
     const login = () => {
-    axios.get("http://127.0.0.1:8080/signIn", {username:username, password:password})         
-    .then(function (response){             
-        setIsSuccess(response.data);             
-        console.log(response.data);             
-        if(isSuccess){                 
-            navigation.navigate("ShowOilPrice")             
-        }         
-    });}
+        if(username || password != ''){
+        axios.get("http://127.0.0.1:8080/signIn", { username: username, password: password })
+            .then(function (response) {
+                setIsSuccess(response.data);
+                console.log(response.data);
+                if (isSuccess) {
+                    navigation.navigate("ShowOilPrice")
+                }
+            }).catch((err) => {
+                console.log(err);
+            });}else{
+                console.log("peaw");
+            }
+    }
 
     return (
         <View style={styles.container}>
@@ -46,7 +52,7 @@ const LoginPage = ({ navigation }) => {
             <Button style={[styles.fontEng, styles.buttonStyle, { margin: 10 }]} onPress={login}>{evaProps => <Text {...evaProps} style={{ color: "#ffffff", fontFamily: 'Kanit_400Regular', }}>Sign In</Text>}</Button>
             <View style={{ marginTop: 10 }}>
                 <Text style={{ color: "#ffffff" }} >ยังไม่มีสมาชิก</Text>
-                <Text onPress={() => { navigation.navigate("Register")}} style={{ color: "#ffffff" }}>สมัครสมาชิกใหม่?</Text>
+                <Text onPress={() => { navigation.navigate("Register") }} style={{ color: "#ffffff" }}>สมัครสมาชิกใหม่?</Text>
                 <View styles={{ backgroundColor: '#FFFFFF' }}>
                 </View>
             </View>

@@ -21,6 +21,7 @@ const Register = () => {
   }
 
   const signup = async () => {
+    if(firstname || lastname || username || password || phoneNumber != ''){
   axios.post("http://127.0.0.1:8080/signUp", {firstname:firstname, lastname:lastname, username:username, password:password, phoneNumber:phoneNumber,favoil:[]})
   .then(function (response){
       if(response.data){
@@ -29,7 +30,9 @@ const Register = () => {
       else{
         alert("ชื่อผู้ใช้นี้ถูกใช้งานไปแล้ว")
       }
-  });
+  });}else{
+    console.log('frame')
+  }
   }
 
   return (

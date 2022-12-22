@@ -29,21 +29,30 @@ const Calculate = () => {
 
 
   const calculate = async () => {
-    axios.post(`http://127.0.0.1:8080/calculate/${distance}/2/13`)
+    axios.post(`http://127.0.0.1:8080/calculate/${distance}/${oils[selectedIndex].today._text}/${rateOfWaste}`)
       .then(function (response) {
         setPrice(response.data)
-        console.log(response)
-        
+        // console.log(response)
       })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   const saveLocation = async () => {
-    axios.post(`http://127.0.0.1:8080/favRoute/${start}/${end}/${oils[selectedIndex].name}/${oils[selectedIndex].today}`)
+    if(start || end || selectedIndex != ''){
+    axios.post(`http://127.0.0.1:8080/favRoute/${start}/${end}/${oils[selectedIndex].type._text}/${oils[selectedIndex].today._text}`)
       .then(function (response) {
         // setPrice(response.data)
         console.log(response.data)
       })
-  }
+      .catch((err) => {
+        console.log(err);
+      });
+  }else{
+    console.log('wave')
+    // alert("ข้อมูลไม่ครบ");
+  }}
 
   useEffect(() => {
     const uri = "https://crmmobile.bangchak.co.th/webservice/oil_price.aspx"
@@ -72,8 +81,8 @@ const Calculate = () => {
         </Layout>
       </View>
       <View style={{ marginTop: 15 }}>
-        <Image source={require('../assets/map.png')} style={{ width: 150, height: 150 }} />
-        <View style={[{ marginTop: 15, alignItems: 'center'}, styles.row]}>
+        <Image source={require('../assets/map.png')} style={{ width: 150, height: 150 ,marginLeft:20, marginTop: 30}} />
+        <View style={[{marginTop: 30, alignItems: 'center'}, styles.row]}>
           <Text style={[{marginRight: 15}, styles.fontEngInputHeader]}>จุดเริ่มต้น</Text>
           <Input style={styles.calInput} onChangeText={text => setStart(text)} />
         </View>
@@ -86,14 +95,14 @@ const Calculate = () => {
         <Text style={[{marginRight: 15}, styles.fontEngInputHeader]}>ระยะทาง</Text>
         <Input style={styles.calInput} onChangeText={text => setDistance(text)} />
       </View>
-      <View style={[styles.row, {marginLeft: 15}]}>
+      <View style={[styles.row, {marginTop: 30}]}>
         <Button style={[styles.fontEng, styles.buttonStyle, { margin: 15 }]} onPress={calculate}>{evaProps => <Text {...evaProps} style={{ color: "#ffffff", fontFamily: 'Kanit_400Regular', }}>คำนวณค่าน้ำมัน</Text>}</Button>
         <Button style={[styles.fontEng, styles.buttonStyle, { margin: 15 }]} onPress={saveLocation}>{evaProps => <Text {...evaProps} style={{ color: "#ffffff", fontFamily: 'Kanit_400Regular', }}>บันทึกเส้นทาง</Text>}</Button>
       </View>
 
       <View style={[{ marginTop: 15 }, styles.row]}>
         <Text style={{ fontFamily: 'Kanit_400Regular', fontSize: 30, color: '#E84545', fontWeight: 'bold' }}>ค่าน้ำมัน: </Text>
-        <Text style={{ fontFamily: 'Kanit_400Regular', fontSize: 30, color: '#E84545', fontWeight: 'bold' }}> 50 </Text>
+        <Text style={{ fontFamily: 'Kanit_400Regular', fontSize: 30, color: '#E84545', fontWeight: 'bold' }}> {price} </Text>
         <Text style={{ fontFamily: 'Kanit_400Regular', fontSize: 30, color: '#E84545', fontWeight: 'bold' }}> บาท </Text>
       </View>
     </View>
