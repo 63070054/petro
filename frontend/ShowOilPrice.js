@@ -1,101 +1,76 @@
 import React, { useState, useEffect, } from 'react';
 import axios from "axios";
 import { FlatList } from 'react-native-web';
-import { Button } from '@ui-kitten/components';
 import { useFonts, Kanit_400Regular } from '@expo-google-fonts/kanit';
-import { SafeAreaView, StyleSheet, ScrollView, View, StatusBar, TouchableOpacity, TextInput, Image } from 'react-native';
-import { Layout, Tab, TabView, Text, Input, Card, IndexPath, Select, SelectItem, Icon } from '@ui-kitten/components';
+import { StyleSheet, ScrollView, View } from 'react-native';
+import { Layout, Text, IndexPath, Select, SelectItem} from '@ui-kitten/components';
+import { FontAwesome, MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
 const convert = require("xml-js");
 
-const ShowOilPrice = ({ navigation }) => {
+const ShowOilPrice = ({ navigation, route }) => {
   const [oils, setOils] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState(new IndexPath(0));
+  console.log(route)
   useEffect(() => {
     const uri = "https://crmmobile.bangchak.co.th/webservice/oil_price.aspx"
     axios.get(uri).then(function (response) {
       const data = JSON.parse(convert.xml2json(response.data, { compact: true, spaces: 2 }))
       setOils([...data.header.item]);
     });
-  }, [!oils]);
-
-  // useEffect(() => {
-  //   if (selectedFilter.row == 1) {
-  //     let data = data[0].filter(item => item.type == "น้ำมนที่ชื่นชอบ")
-  //     setData(data)
-  //   }
-  //   else {
-  //     let data = data[0]
-  //     setData(data)
-  //   }
-  // }, [selectedFilter])
-  // const filter = [
-  //   'น้ำมนที่ชื่นชอบ',
-  //   'ทั้งหมด',
-  // ];
-  // const displayValue = filter[selectedFilter.row];
-  // const filterChange = async (index) => {
-  //   setSelectedFilter(index)
-  // }
+  }, []);
+  {}
 
   let [fontsLoaded] = useFonts({
-        Kanit_400Regular
+    Kanit_400Regular
   });
 
   if (!fontsLoaded) {
     return null;
   }
 
-  const renderItem = ({ item }) => {
+  const renderItem = ({ item, index }) => {
     return (
-      <View style={[styles.row, styles.card]}>
+      <View style={[styles.row]}>
         <View style={[styles.column1]}>
-          <Text style={[{ color: 'white', fontSize: '25px' }]}>♡</Text>
+          <Text onPress={()=>{console.log(index)}} style={[styles.fontTh, { color: 'white', fontSize: '16px' }]}>
+            {/* <MaterialCommunityIcons style={[{marginRight: 5}]} size={15} color={"red"} name="cards-heart-outline" />
+            <MaterialCommunityIcons style={[{marginRight: 5}]} size={15} color={"red"} name="cards-heart" /> */}
+            {item.type._text} 
+          </Text>
         </View>
-        <View style={[styles.column3, { padding: 5 }]}>
-          <Text style={[styles.fontTh, { color: 'white', fontSize: '18px' }]}>{item.type._text}</Text>
+        <View style={[styles.column2,]}>
+          <Text style={[styles.fontTh, { color: 'white', fontSize: '16px' }]}>{item.yesterday._text}</Text>
         </View>
-        <View style={[styles.column3, { padding: 5 }]}>
-          <Text style={[styles.fontTh, { color: 'white', fontSize: '13px' }]}>{item.yesterday._text}</Text>
-        </View>
-        <View style={[styles.column3, { padding: 5 }]}>
-          <Text style={[styles.fontTh, { color: 'white', fontSize: '13px' }]}>{item.today._text}</Text>
-        </View>
-        <View style={[styles.column1, { padding: 5 }]}>
-          {/* <Text style={[styles.fontTh, { color: 'white', fontSize: '13px' }]}>{parseInt(item.yesterday._text) - parseInt(item.today._text)}</Text> */}
-          <Text style={[styles.fontTh, { color: 'white', fontSize: '13px' }]}>{item.tomorrow._text}</Text>
+        <View style={[styles.column2,]}>
+          <Text style={[styles.fontTh, { color: 'white', fontSize: '16px' }]}>{item.today._text}</Text>
         </View>
       </View>
     )
   }
   return (
-    <View style={[styles.MainContainer]}>
-      <ScrollView style={styles.scrollView}>
-        <Layout style={[styles.tabContainer, { backgroundColor: '#2B2E4A' }]}>
-          <View style={styles.containerFilter}>
-            <Text category='h1' style={[styles.fontTh, { color: '#903749', paddingRight: '10px' }]}>ราคานํ้ามัน</Text>
-            <Layout level='1'>
+    <View style={[styles.container]}>
+      <View style={styles.containerFilter}>
+            <Text category='h1' style={[styles.fontTh, { color: '#E84545', paddingRight: '10px' }]}>ราคานํ้ามัน</Text>
+            {/* <Layout level='1'>
               <Select placeholder={'Filter'}>
                 <SelectItem title='น้ำมันที่ชื่นชอบ' />
                 <SelectItem title='ทั้งหมด' />
               </Select>
-            </Layout>
+            </Layout> */}
           </View>
+
+      <ScrollView style={styles.scrollView}>
+        <Layout style={[styles.tabContainer]}>
           <View style={styles.containerCardparty}>
-            <View style={[styles.row, styles.card, { backgroundColor: 'white', height: '80px', }]}>
-              <View style={[styles.column1]}>
-                <Text style={[styles.fontTh, { color: '#E84545', fontSize: '18px' }]}></Text>
+            <View style={[styles.row, { backgroundColor: '#c90076', height: '50px'}]}>
+              <View style={[styles.column1, { textAlign: 'center'}]}>
+                <Text style={[styles.fontTh, { color: '#ffffff', fontSize: '16px' }]}>นํ้ามัน</Text>
               </View>
-              <View style={[styles.column3]}>
-                <Text style={[styles.fontTh, { color: '#E84545', fontSize: '18px' }]}>ชื่อนํ้ามัน</Text>
+              <View style={[styles.column2]}>
+                <Text style={[styles.fontTh, { color: '#ffffff', fontSize: '16px' }]}>เมื่อวาน</Text>
               </View>
-              <View style={[styles.column3]}>
-                <Text style={[styles.fontTh, { color: '#E84545', fontSize: '18px' }]}>ราคานํ้ามันเมื่อวาน</Text>
-              </View>
-              <View style={[styles.column3]}>
-                <Text style={[styles.fontTh, { color: '#E84545', fontSize: '18px' }]}>ราคานํ้ามันวันนี้</Text>
-              </View>
-              <View style={[styles.column3]}>
-                <Text style={[styles.fontTh, { color: '#4542C1', fontSize: '18px' }]}>ราคานํ้ามันพรุ่งนี้</Text>
+              <View style={[styles.column2]}>
+                <Text style={[styles.fontTh, { color: '#ffffff', fontSize: '16px' }]}>วันนี้</Text>
               </View>
             </View>
             <FlatList data={oils} renderItem={renderItem}></FlatList>
@@ -103,7 +78,6 @@ const ShowOilPrice = ({ navigation }) => {
         </Layout>
       </ScrollView>
     </View>
-
   )
 }
 const styles = StyleSheet.create({
@@ -111,14 +85,17 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#2B2E4A',
     alignItems: 'center',
-    //   justifyContent: 'center',
+    justifyContent: 'center',
+    padding: 10,
   },
   tabContainer: {
     height: '100%',
     width: '100%',
     alignItems: 'center',
-    backgroundColor: 'transparent',
-    paddingTop: '20px'
+    paddingTop: '10px',
+    borderStyle: 'solid',
+    borderColor: 'red',
+    backgroundColor: '',
   },
   fontEng: {
     fontFamily: 'Kanit_400Regular',
@@ -134,6 +111,9 @@ const styles = StyleSheet.create({
     borderRadius: '30px',
     width: 280,
     backgroundColor: 'transparent',
+  },
+  scrollView :{
+    width: "100%",
   },
   fontTh: {
     fontFamily: 'Kanit_400Regular',
@@ -152,32 +132,36 @@ const styles = StyleSheet.create({
   },
   containerFilter: {
     alignItems: 'center',
-    // height: '100%', width: '100%' ,
+    // height: '100%', 
+    // width: '100%' ,
     // backgroundColor: 'white',
-    flexDirection: 'row',
-  },
-  card: {
-    padding: 5,
-    backgroundColor: '#903749',
-    borderRadius: "15px",
-    borderColor: "transparent",
+    flexDirection: 'row'
   },
   containerCardparty: {
-    width: '85%',
+    width: '100%',
+    justifyContent: 'center',
+    alignContent: 'center',
   },
   row: {
-    flexWrap: "wrap",
-    display: "flex",
     flexDirection: 'row',
-    flexWrap: 'wrap',
     width: '100%',
-    height: '85px'
-  },
-  column3: {
-    width: "21%"
+    height: '70px',
+    padding: 5,
+    // backgroundColor: '#903749',
+    borderStyle: 'solid',
+    borderColor: 'Green',
+    alignItems: 'center',
+    alignContent: 'center',
   },
   column1: {
-    width: "12%"
+    width: "50%",
+    // textAlign: 'center'
+    borderStyle: 'solid',
+    borderColor: 'green'
+  },
+  column2: {
+    width: "25%",
+    textAlign: 'center'
   },
   MainContainer: {
     flex: 1

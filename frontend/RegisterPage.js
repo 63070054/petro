@@ -5,7 +5,7 @@ import { Input, Button } from '@ui-kitten/components';
 import axios from 'axios';
 
 
-const Register = () => {
+const Register = ({navigation, route}) => {
   const [firstname, setFirstname] = useState('');
   const [lastname, setLastname] = useState('');
   const [username, setUsername] = useState('');
@@ -15,21 +15,24 @@ const Register = () => {
   let [fontsLoaded] = useFonts({
     Kanit_400Regular
   });
-
+  console.log(route)
   if (!fontsLoaded) {
     return null;
   }
 
   const signup = async () => {
     if(firstname || lastname || username || password || phoneNumber != ''){
-  axios.post("http://127.0.0.1:8080/signUp", {firstname:firstname, lastname:lastname, username:username, password:password, phoneNumber:phoneNumber,favoil:[]})
+  axios.post("http://127.0.0.1:8080/signUp", {firstName:firstname, lastName:lastname, username:username, password:password, phone:phoneNumber,favoil:[]})
   .then(function (response){
       if(response.data){
+        alert("สมัครสมาชิกสำเร็จ")
         navigation.navigate("Login")   
       }
       else{
         alert("ชื่อผู้ใช้นี้ถูกใช้งานไปแล้ว")
       }
+  }).catch((err) => {
+    console.log(err);
   });}else{
     console.log('frame')
   }

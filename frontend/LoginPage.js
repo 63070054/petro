@@ -6,11 +6,10 @@ import Register from './RegisterPage';
 import axios from 'axios';
 import ShowOilPrice from './ShowOilPrice';
 
-const LoginPage = ({ navigation }) => {
+const LoginPage = ({ navigation, route }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [alert, setAlert] = useState('');
-    const [isSuccess, setIsSuccess] = useState(false);
     let [fontsLoaded] = useFonts({
         Kanit_400Regular
     });
@@ -21,19 +20,21 @@ const LoginPage = ({ navigation }) => {
     var user
 
     const login = () => {
-        if(username || password != ''){
-        axios.get("http://127.0.0.1:8080/signIn", {data: { username: username, password: password }})
+        if(username != "" && password != ""){
+        axios.post("http://127.0.0.1:8080/signIn", { username: username, password: password})
             .then(function (response) {
-                setIsSuccess(response.data);
-                console.log(response.data);
-                if (isSuccess) {
-                    navigation.navigate("ShowOilPrice")
+                if (response.data) {
+                    navigation.navigate("Tab", {username: username})
+                }else{
+                    console.log("wrong")
                 }
             }).catch((err) => {
                 console.log(err);
-            });}else{
-                console.log("peaw");
-            }
+            });
+        }else{
+            console.log("ใส่ชื่อ")
+            // alert("กรุณาใส่ชื่อผู้ใช้งานและรหัสผ่าน")
+        }
     }
 
     return (
@@ -52,7 +53,7 @@ const LoginPage = ({ navigation }) => {
             <Button style={[styles.fontEng, styles.buttonStyle, { margin: 10 }]} onPress={login}>{evaProps => <Text {...evaProps} style={{ color: "#ffffff", fontFamily: 'Kanit_400Regular', }}>Sign In</Text>}</Button>
             <View style={{ marginTop: 10 }}>
                 <Text style={{ color: "#ffffff" }} >ยังไม่มีสมาชิก</Text>
-                <Text onPress={() => { navigation.navigate("Register") }} style={{ color: "#ffffff" }}>สมัครสมาชิกใหม่?</Text>
+                <Text onPress={() => { navigation.navigate("Register", {username: username}) }} style={{ color: "#ffffff" }}>สมัครสมาชิกใหม่?</Text>
                 <View styles={{ backgroundColor: '#FFFFFF' }}>
                 </View>
             </View>
