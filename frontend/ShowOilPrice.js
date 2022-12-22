@@ -14,11 +14,9 @@ const ShowOilPrice = ({ navigation }) => {
     const uri = "https://crmmobile.bangchak.co.th/webservice/oil_price.aspx"
     axios.get(uri).then(function (response) {
       const data = JSON.parse(convert.xml2json(response.data, { compact: true, spaces: 2 }))
-      setOils(data.header.item);
+      setOils([...data.header.item]);
     });
   }, [!oils]);
-
-
 
   // useEffect(() => {
   //   if (selectedFilter.row == 1) {
@@ -38,7 +36,6 @@ const ShowOilPrice = ({ navigation }) => {
   // const filterChange = async (index) => {
   //   setSelectedFilter(index)
   // }
-
 
   let [fontsLoaded] = useFonts({
         Kanit_400Regular
@@ -64,7 +61,8 @@ const ShowOilPrice = ({ navigation }) => {
           <Text style={[styles.fontTh, { color: 'white', fontSize: '13px' }]}>{item.today._text}</Text>
         </View>
         <View style={[styles.column1, { padding: 5 }]}>
-          <Text style={[styles.fontTh, { color: 'white', fontSize: '13px' }]}>{parseInt(item.yesterday._text) - parseInt(item.today._text)}</Text>
+          {/* <Text style={[styles.fontTh, { color: 'white', fontSize: '13px' }]}>{parseInt(item.yesterday._text) - parseInt(item.today._text)}</Text> */}
+          <Text style={[styles.fontTh, { color: 'white', fontSize: '13px' }]}>{item.tomorrow._text}</Text>
         </View>
       </View>
     )
@@ -74,16 +72,16 @@ const ShowOilPrice = ({ navigation }) => {
       <ScrollView style={styles.scrollView}>
         <Layout style={[styles.tabContainer, { backgroundColor: '#2B2E4A' }]}>
           <View style={styles.containerFilter}>
-            <Text category='h1' style={[styles.fontTh, { color: '#E84545', paddingRight: '50px' }]}>ราคานํ้ามัน</Text>
+            <Text category='h1' style={[styles.fontTh, { color: '#903749', paddingRight: '10px' }]}>ราคานํ้ามัน</Text>
             <Layout level='1'>
-              <Select>
-                <SelectItem title='น้ำมนที่ชื่นชอบ' />
+              <Select placeholder={'Filter'}>
+                <SelectItem title='น้ำมันที่ชื่นชอบ' />
                 <SelectItem title='ทั้งหมด' />
               </Select>
             </Layout>
           </View>
           <View style={styles.containerCardparty}>
-            <View style={[styles.row, styles.card, { backgroundColor: '#53354A', height: '80px' }]}>
+            <View style={[styles.row, styles.card, { backgroundColor: 'white', height: '80px', }]}>
               <View style={[styles.column1]}>
                 <Text style={[styles.fontTh, { color: '#E84545', fontSize: '18px' }]}></Text>
               </View>
@@ -96,14 +94,12 @@ const ShowOilPrice = ({ navigation }) => {
               <View style={[styles.column3]}>
                 <Text style={[styles.fontTh, { color: '#E84545', fontSize: '18px' }]}>ราคานํ้ามันวันนี้</Text>
               </View>
-              <View style={[styles.column1]}>
-                <Text style={[styles.fontTh, { color: '#4542C1', fontSize: '18px' }]}></Text>
+              <View style={[styles.column3]}>
+                <Text style={[styles.fontTh, { color: '#4542C1', fontSize: '18px' }]}>ราคานํ้ามันพรุ่งนี้</Text>
               </View>
             </View>
             <FlatList data={oils} renderItem={renderItem}></FlatList>
-
           </View>
-
         </Layout>
       </ScrollView>
     </View>
@@ -167,7 +163,7 @@ const styles = StyleSheet.create({
     borderColor: "transparent",
   },
   containerCardparty: {
-    width: '80%',
+    width: '85%',
   },
   row: {
     flexWrap: "wrap",
@@ -178,7 +174,7 @@ const styles = StyleSheet.create({
     height: '85px'
   },
   column3: {
-    width: "25%"
+    width: "21%"
   },
   column1: {
     width: "12%"
