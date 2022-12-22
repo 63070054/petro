@@ -2,9 +2,7 @@ import React, { useState, useEffect, } from 'react';
 import axios from "axios";
 import { FlatList } from 'react-native-web';
 import { Button } from '@ui-kitten/components';
-import { useFonts, Inter_900Black } from '@expo-google-fonts/inter';
-import { OpenSans_500Medium, } from '@expo-google-fonts/open-sans';
-import { Kanit_400Regular } from '@expo-google-fonts/kanit';
+import { useFonts, Kanit_400Regular } from '@expo-google-fonts/kanit';
 import { SafeAreaView, StyleSheet, ScrollView, View, StatusBar, TouchableOpacity, TextInput, Image } from 'react-native';
 import { Layout, Tab, TabView, Text, Input, Card, IndexPath, Select, SelectItem, Icon } from '@ui-kitten/components';
 const convert = require("xml-js");
@@ -43,7 +41,7 @@ const ShowOilPrice = ({ navigation }) => {
 
 
   let [fontsLoaded] = useFonts({
-    Inter_900Black, OpenSans_500Medium, Kanit_400Regular
+        Kanit_400Regular
   });
 
   if (!fontsLoaded) {
@@ -74,9 +72,9 @@ const ShowOilPrice = ({ navigation }) => {
   return (
     <View style={[styles.MainContainer]}>
       <ScrollView style={styles.scrollView}>
-        <Layout style={[styles.tabContainer, { backgroundColor: 'black' }]}>
+        <Layout style={[styles.tabContainer, { backgroundColor: '#2B2E4A' }]}>
           <View style={styles.containerFilter}>
-            <Text category='h1' style={[styles.fontTh, { color: '#903749', paddingRight: '50px' }]}>ราคานํ้ามัน</Text>
+            <Text category='h1' style={[styles.fontTh, { color: '#E84545', paddingRight: '50px' }]}>ราคานํ้ามัน</Text>
             <Layout level='1'>
               <Select>
                 <SelectItem title='น้ำมนที่ชื่นชอบ' />
@@ -85,18 +83,18 @@ const ShowOilPrice = ({ navigation }) => {
             </Layout>
           </View>
           <View style={styles.containerCardparty}>
-            <View style={[styles.row, styles.card, { backgroundColor: '#2B2E4A', height: '80px' }]}>
+            <View style={[styles.row, styles.card, { backgroundColor: '#53354A', height: '80px' }]}>
               <View style={[styles.column1]}>
-                <Text style={[styles.fontTh, { color: '#4542C1', fontSize: '18px' }]}></Text>
+                <Text style={[styles.fontTh, { color: '#E84545', fontSize: '18px' }]}></Text>
               </View>
               <View style={[styles.column3]}>
-                <Text style={[styles.fontTh, { color: '#4542C1', fontSize: '18px' }]}>ชื่อนํ้ามัน</Text>
+                <Text style={[styles.fontTh, { color: '#E84545', fontSize: '18px' }]}>ชื่อนํ้ามัน</Text>
               </View>
               <View style={[styles.column3]}>
-                <Text style={[styles.fontTh, { color: '#4542C1', fontSize: '18px' }]}>ราคานํ้ามันเมื่อวาน</Text>
+                <Text style={[styles.fontTh, { color: '#E84545', fontSize: '18px' }]}>ราคานํ้ามันเมื่อวาน</Text>
               </View>
               <View style={[styles.column3]}>
-                <Text style={[styles.fontTh, { color: '#4542C1', fontSize: '18px' }]}>ราคานํ้ามันวันนี้</Text>
+                <Text style={[styles.fontTh, { color: '#E84545', fontSize: '18px' }]}>ราคานํ้ามันวันนี้</Text>
               </View>
               <View style={[styles.column1]}>
                 <Text style={[styles.fontTh, { color: '#4542C1', fontSize: '18px' }]}></Text>
@@ -115,7 +113,7 @@ const ShowOilPrice = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#2B2E4A',
     alignItems: 'center',
     //   justifyContent: 'center',
   },
