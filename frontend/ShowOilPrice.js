@@ -76,6 +76,7 @@ const ShowOilPrice = ({ navigation, route }) => {
           </View>
         </Layout>
       </ScrollView>
+      <Button style={[{width: 100, backgroundColor: "#E84545", borderWidth: 0}]} onPress={()=>navigation.navigate("Login")}>Sign Out</Button>
     </View>
   )
 }
