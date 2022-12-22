@@ -74,8 +74,8 @@ const ShowOilPrice = ({ navigation }) => {
           <View style={styles.containerFilter}>
             <Text category='h1' style={[styles.fontTh, { color: '#903749', paddingRight: '10px' }]}>ราคานํ้ามัน</Text>
             <Layout level='1'>
-              <Select>
-                <SelectItem title='น้ำมนที่ชื่นชอบ' />
+              <Select placeholder={'Filter'}>
+                <SelectItem title='น้ำมันที่ชื่นชอบ' />
                 <SelectItem title='ทั้งหมด' />
               </Select>
             </Layout>
