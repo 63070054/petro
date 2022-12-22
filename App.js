@@ -9,20 +9,22 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Calculate from './frontend/CalculateOil';
 import ShowOilPrice from './frontend/ShowOilPrice';
+import MemoRoute from './frontend/MemoRoute';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <ApplicationProvider {...eva} theme={eva.light}>
-      <NavigationContainer>
+      {/* <NavigationContainer>
         <Stack.Navigator screenOptions={{headerShown:false}}>
           <Stack.Screen name='Login' component={LoginPage} />
           <Stack.Screen name='Register' component={Register}/>
         </Stack.Navigator>
-      </NavigationContainer>
+      </NavigationContainer> */}
       {/* <Calculate></Calculate> */}
       {/* <ShowOilPrice></ShowOilPrice> */}
+      {/* <MemoRoute></MemoRoute> */}
     </ApplicationProvider>
   );
 }

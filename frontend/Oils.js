@@ -14,7 +14,7 @@ const Oils = ({ navigation }) => {
             const data = JSON.parse(convert.xml2json(response.data, {compact:true, spaces:2}))
             setOils(data.header.item);
         });
-    }, [!oils]);
+    }, [!data]);
 
     const renderItem = ({item}) =>{
         return(

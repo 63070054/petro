@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import { useFonts, Kanit_400Regular } from '@expo-google-fonts/kanit';
-import { Input, IndexPath, Button, Layout, Select, SelectItem} from '@ui-kitten/components';
+import { Input, IndexPath, Button, Layout, Select, SelectItem } from '@ui-kitten/components';
 import axios from 'axios';
+const convert = require("xml-js");
 
 
 const Calculate = () => {
@@ -14,79 +15,86 @@ const Calculate = () => {
   const [price, setPrice] = useState('');
   const [start, setStart] = useState('');
   const [end, setEnd] = useState('');
+  const [oils, setOils] = useState([]);
+
   
-  const data = [
-    'อาหาร',
-    'ท่องเที่ยว',
-    'พักผ่อน',
-    'เรียน/ทำงาน',
-    'อื่น ๆ'
-];
-const displayValue = data[selectedIndex.row];
   let [fontsLoaded] = useFonts({
     Kanit_400Regular
   });
 
-  if (!fontsLoaded) {
-    return null;
-  }
+  // if (!fontsLoaded) {
+  //   return null;
+  // }
+
+
 
   const calculate = async () => {
-    axios.post("http://127.0.0.1:8080/calculate/"+distance+"/"+oilPrice+"/"+rateOfWaste)
-  .then(function (response){
-    // setPrice(response.data)
-    console.log(response.data)
-  })}
+    axios.post(`http://127.0.0.1:8080/calculate/${distance}/2/13`)
+      .then(function (response) {
+        setPrice(response.data)
+        console.log(response)
+        
+      })
+  }
 
   const saveLocation = async () => {
-    axios.post("http://127.0.0.1:8080/favRoute/", {distance:distance, oil_Price:40, rate_of_waste:14 })
-  .then(function (response){
-    // setPrice(response.data)
-    console.log(response.data)
-  })}
+    axios.post(`http://127.0.0.1:8080/favRoute/${start}/${end}/${oils[selectedIndex].name}/${oils[selectedIndex].today}`)
+      .then(function (response) {
+        // setPrice(response.data)
+        console.log(response.data)
+      })
+  }
 
+  useEffect(() => {
+    const uri = "https://crmmobile.bangchak.co.th/webservice/oil_price.aspx"
+    axios.get(uri).then(function (response) {
+      const data = JSON.parse(convert.xml2json(response.data, { compact: true, spaces: 2 }))
+      console.log(data)
+      setOils([...data.header.item]);
+    });
+  }, []);
+  const oilName = [];
+  oils.map(oil => { oilName.push(oil.type._text) });
+  
+  const displayValue = oilName[selectedIndex.row];
   return (
     <View style={styles.container}>
-      <Text style={{ fontFamily: 'Kanit_400Regular', fontSize: 60, color: '#E84545' , fontWeight: 'bold'}}>PETRO</Text>
+      <Text style={{ fontFamily: 'Kanit_400Regular', fontSize: 60, color: '#E84545', fontWeight: 'bold' }}>PETRO</Text>
       <View style={styles.row}>
-      <Text style={{ fontFamily: 'Kanit_400Regular', fontSize: 20, color: '#E84545'}}>ชนิดน้ำมัน : </Text>
-                    <Layout level='1' style={{ marginLeft: 5 }}>
-                        <Select
-                            value={displayValue}
-                            selectedIndex={selectedIndex}
-                            onSelect={index => setSelectedIndex(index)}>
-                            <SelectItem title='อาหาร' />
-                            <SelectItem title='ท่องเที่ยว' />
-                            <SelectItem title='พักผ่อน' />
-                            <SelectItem title='เรียน/ทำงาน' />
-                            <SelectItem title='อื่น ๆ' />
-                        </Select>
-                    </Layout>
-            </View>
+        <Text style={{ fontFamily: 'Kanit_400Regular', fontSize: 20, color: '#E84545' }}>น้ำมัน : </Text>
+        <Layout level='1' style={{ marginLeft: 5 }}>
+          <Select
+            value={displayValue}
+            selectedIndex={selectedIndex}
+            onSelect={index => setSelectedIndex(index)}>
+            {oilName.map(oil => (<SelectItem title={oil} />))}
+          </Select>
+        </Layout>
+      </View>
       <View style={{ marginTop: 15 }}>
-      <Image source={require('../assets/map.png')} style={{ width: 150, height: 150 }} />
-      <View style={[{ marginTop: 15 }, styles.row]}>
-        <Text style={styles.fontEngInputHeader}>จุดเริ่มต้น</Text>
-        <Input style={styles.calInput} onChangeText={text => setStart(text)} />
+        <Image source={require('../assets/map.png')} style={{ width: 150, height: 150 }} />
+        <View style={[{ marginTop: 15, alignItems: 'center'}, styles.row]}>
+          <Text style={[{marginRight: 15}, styles.fontEngInputHeader]}>จุดเริ่มต้น</Text>
+          <Input style={styles.calInput} onChangeText={text => setStart(text)} />
+        </View>
+        <View style={[{ marginTop: 10, alignItems: 'center'}, styles.row]}>
+          <Text style={[{marginRight: 15}, styles.fontEngInputHeader]}>ปลายทาง</Text>
+          <Input style={styles.calInput} onChangeText={text => setEnd(text)} />
+        </View>
       </View>
-      <View style={[{ marginTop: 10 }, styles.row]}>
-        <Text style={styles.fontEngInputHeader}>ปลายทาง</Text>
-        <Input style={styles.calInput} onChangeText={text => setEnd(text)} />
-      </View>
-      </View>
-      <View style={[{ marginTop: 10 }, styles.row]}>
-        <Text style={styles.fontEngInputHeader}>ระยะทาง</Text>
+      <View style={[{ marginTop: 10, alignItems: 'center'}, styles.row,]}>
+        <Text style={[{marginRight: 15}, styles.fontEngInputHeader]}>ระยะทาง</Text>
         <Input style={styles.calInput} onChangeText={text => setDistance(text)} />
       </View>
-      <View style={styles.row}>
-      <Button style={[styles.fontEng, styles.buttonStyle, { margin: 5 }]} onPress={calculate}>{evaProps => <Text {...evaProps} style={{ color: "#ffffff", fontFamily: 'Kanit_400Regular', }}>คำนวณค่าน้ำมัน</Text>}</Button>
-      <Button style={[styles.fontEng, styles.buttonStyle, { margin: 5 }]} onPress={saveLocation}>{evaProps => <Text {...evaProps} style={{ color: "#ffffff", fontFamily: 'Kanit_400Regular', }}>บันทึกเส้นทาง</Text>}</Button>
+      <View style={[styles.row, {marginLeft: 15}]}>
+        <Button style={[styles.fontEng, styles.buttonStyle, { margin: 15 }]} onPress={calculate}>{evaProps => <Text {...evaProps} style={{ color: "#ffffff", fontFamily: 'Kanit_400Regular', }}>คำนวณค่าน้ำมัน</Text>}</Button>
+        <Button style={[styles.fontEng, styles.buttonStyle, { margin: 15 }]} onPress={saveLocation}>{evaProps => <Text {...evaProps} style={{ color: "#ffffff", fontFamily: 'Kanit_400Regular', }}>บันทึกเส้นทาง</Text>}</Button>
       </View>
-      
+
       <View style={[{ marginTop: 15 }, styles.row]}>
-        <Text style={{ fontFamily: 'Kanit_400Regular', fontSize: 30, color: '#E84545' , fontWeight: 'bold'}}>ค่าน้ำมัน: </Text>
-        <Text style={{ fontFamily: 'Kanit_400Regular', fontSize: 30, color: '#E84545' , fontWeight: 'bold'}}> 50 </Text>
-        <Text style={{ fontFamily: 'Kanit_400Regular', fontSize: 30, color: '#E84545' , fontWeight: 'bold'}}> บาท </Text>
+        <Text style={{ fontFamily: 'Kanit_400Regular', fontSize: 30, color: '#E84545', fontWeight: 'bold' }}>ค่าน้ำมัน: </Text>
+        <Text style={{ fontFamily: 'Kanit_400Regular', fontSize: 30, color: '#E84545', fontWeight: 'bold' }}> 50 </Text>
+        <Text style={{ fontFamily: 'Kanit_400Regular', fontSize: 30, color: '#E84545', fontWeight: 'bold' }}> บาท </Text>
       </View>
     </View>
   );
@@ -152,7 +160,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '100%',
     height: '10'
-},
+  },
 });
 
 export default Calculate
