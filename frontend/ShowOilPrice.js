@@ -62,7 +62,7 @@ const ShowOilPrice = ({ navigation, route }) => {
         <Layout style={[styles.tabContainer]}>
           <View style={styles.containerCardparty}>
             <View style={[styles.row, { backgroundColor: '#c90076', height: '50px'}]}>
-              <View style={[{ textAlign: 'center'}]}>
+              <View style={[styles.column1, { textAlign: 'center'}]}>
                 <Text style={[styles.fontTh, { color: '#ffffff', fontSize: '16px' }]}>นํ้ามัน</Text>
               </View>
               <View style={[styles.column2]}>
