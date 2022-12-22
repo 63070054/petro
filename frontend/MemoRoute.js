@@ -9,9 +9,10 @@ import { SafeAreaView, StyleSheet, ScrollView, View, StatusBar, TouchableOpacity
 import { Layout, Tab, TabView, Text, Input, Card, IndexPath, Select, SelectItem, Icon } from '@ui-kitten/components';
 const convert = require("xml-js");
 
-const ShowOilPrice = ({ navigation }) => {
+const MemoRoute = ({ navigation }) => {
   const [oils, setOils] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState(new IndexPath(0));
+
   useEffect(() => {
     const uri = "https://crmmobile.bangchak.co.th/webservice/oil_price.aspx"
     axios.get(uri).then(function (response) {
@@ -19,28 +20,6 @@ const ShowOilPrice = ({ navigation }) => {
       setOils(data.header.item);
     });
   }, [!oils]);
-
-
-
-  // useEffect(() => {
-  //   if (selectedFilter.row == 1) {
-  //     let data = data[0].filter(item => item.type == "น้ำมนที่ชื่นชอบ")
-  //     setData(data)
-  //   }
-  //   else {
-  //     let data = data[0]
-  //     setData(data)
-  //   }
-  // }, [selectedFilter])
-  // const filter = [
-  //   'น้ำมนที่ชื่นชอบ',
-  //   'ทั้งหมด',
-  // ];
-  // const displayValue = filter[selectedFilter.row];
-  // const filterChange = async (index) => {
-  //   setSelectedFilter(index)
-  // }
-
 
   let [fontsLoaded] = useFonts({
     Inter_900Black, OpenSans_500Medium, Kanit_400Regular
@@ -52,66 +31,38 @@ const ShowOilPrice = ({ navigation }) => {
 
   const renderItem = ({ item }) => {
     return (
-      <View style={[styles.row, styles.card]}>
-        <View style={[styles.column1]}>
-          <Text style={[{ color: 'white', fontSize: '25px' }]}>♡</Text>
+      <View style={[styles.row, styles.card]} >
+        <View style={[styles.column2, { padding: 5 }]}>
+            <Image source={require('../assets/map.png')} style={{ width: "50px", height: '50px', aspectRatio: "1/1", objectFit: "cover" }} />
+            <Text style={[styles.fontTh, { color: 'white', fontSize: '10px' }]}>{item.type._text}</Text>
         </View>
-        <View style={[styles.column3, { padding: 5 }]}>
-          <Text style={[styles.fontTh, { color: 'white', fontSize: '18px' }]}>{item.type._text}</Text>
+        <View style={[styles.column3, { padding: 5 , textAlign: 'center'}]}>
+            <Text style={[styles.fontTh, { color: 'white', fontSize: '13px' }]}>สิงค์บุรี - ชยนาท</Text>
+            <Text style={[styles.fontTh, { color: 'white', fontSize: '13px' }]}>ระยะทาง 1.00 ก.ม.</Text>
         </View>
-        <View style={[styles.column3, { padding: 5 }]}>
-          <Text style={[styles.fontTh, { color: 'white', fontSize: '13px' }]}>{item.yesterday._text}</Text>
-        </View>
-        <View style={[styles.column3, { padding: 5 }]}>
-          <Text style={[styles.fontTh, { color: 'white', fontSize: '13px' }]}>{item.today._text}</Text>
-        </View>
-        <View style={[styles.column1, { padding: 5 }]}>
-          <Text style={[styles.fontTh, { color: 'white', fontSize: '13px' }]}>{parseInt(item.yesterday._text) - parseInt(item.today._text)}</Text>
+        <View style={[styles.column3, { padding: 5 , textAlign: 'center'}]}>
+            <Text style={[styles.fontTh, { color: 'white', fontSize: '23px' }]}>560 บาท</Text>
         </View>
       </View>
     )
   }
+
   return (
     <View style={[styles.MainContainer]}>
       <ScrollView style={styles.scrollView}>
-        <Layout style={[styles.tabContainer, { backgroundColor: 'black' }]}>
+        <Layout style={[styles.tabContainer, { backgroundColor: 'white' }]}>
           <View style={styles.containerFilter}>
-            <Text category='h1' style={[styles.fontTh, { color: '#903749', paddingRight: '50px' }]}>ราคานํ้ามัน</Text>
-            <Layout level='1'>
-              <Select>
-                <SelectItem title='น้ำมนที่ชื่นชอบ' />
-                <SelectItem title='ทั้งหมด' />
-              </Select>
-            </Layout>
+            <Text category='h1' style={[styles.fontTh, { color: '#903749' }]}>เส้นทางที่บันทึก</Text>
           </View>
-          <View style={styles.containerCardparty}>
-            <View style={[styles.row, styles.card, { backgroundColor: '#2B2E4A', height: '80px' }]}>
-              <View style={[styles.column1]}>
-                <Text style={[styles.fontTh, { color: '#4542C1', fontSize: '18px' }]}></Text>
-              </View>
-              <View style={[styles.column3]}>
-                <Text style={[styles.fontTh, { color: '#4542C1', fontSize: '18px' }]}>ชื่อนํ้ามัน</Text>
-              </View>
-              <View style={[styles.column3]}>
-                <Text style={[styles.fontTh, { color: '#4542C1', fontSize: '18px' }]}>ราคานํ้ามันเมื่อวาน</Text>
-              </View>
-              <View style={[styles.column3]}>
-                <Text style={[styles.fontTh, { color: '#4542C1', fontSize: '18px' }]}>ราคานํ้ามันวันนี้</Text>
-              </View>
-              <View style={[styles.column1]}>
-                <Text style={[styles.fontTh, { color: '#4542C1', fontSize: '18px' }]}></Text>
-              </View>
-            </View>
-            <FlatList data={oils} renderItem={renderItem}></FlatList>
-
+          <View style={styles.containerCardparty} >
+            <FlatList data={oils} renderItem={renderItem} ></FlatList>
           </View>
-
         </Layout>
       </ScrollView>
     </View>
-
   )
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -180,10 +131,10 @@ const styles = StyleSheet.create({
     height: '85px'
   },
   column3: {
-    width: "25%"
+    width: "40%",
   },
-  column1: {
-    width: "12%"
+  column2: {
+    width: "20%"
   },
   MainContainer: {
     flex: 1
@@ -207,4 +158,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ShowOilPrice
+export default MemoRoute
