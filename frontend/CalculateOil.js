@@ -12,6 +12,8 @@ const Calculate = () => {
   const [selectedIndex, setSelectedIndex] = useState('');
   const [rateOfWaste, setRateOfWaste] = useState('');
   const [price, setPrice] = useState('');
+  const [start, setStart] = useState('');
+  const [end, setEnd] = useState('');
   
   const data = [
     'อาหาร',
@@ -30,7 +32,14 @@ const displayValue = data[selectedIndex.row];
   }
 
   const calculate = async () => {
-    axios.post("http://127.0.0.1:8080/calculate", {distance:distance, oil_Price:40, rate_of_waste:14 })
+    axios.post("http://127.0.0.1:8080/calculate/"+distance+"/"+oilPrice+"/"+rateOfWaste)
+  .then(function (response){
+    // setPrice(response.data)
+    console.log(response.data)
+  })}
+
+  const saveLocation = async () => {
+    axios.post("http://127.0.0.1:8080/favRoute/", {distance:distance, oil_Price:40, rate_of_waste:14 })
   .then(function (response){
     // setPrice(response.data)
     console.log(response.data)
@@ -40,8 +49,8 @@ const displayValue = data[selectedIndex.row];
     <View style={styles.container}>
       <Text style={{ fontFamily: 'Kanit_400Regular', fontSize: 60, color: '#E84545' , fontWeight: 'bold'}}>PETRO</Text>
       <View style={styles.row}>
-      <Text style={{ fontFamily: 'Kanit_400Regular', fontSize: 20, color: '#E84545'}}>ชนิดน้ำมัน: </Text>
-                    <Layout level='1'>
+      <Text style={{ fontFamily: 'Kanit_400Regular', fontSize: 20, color: '#E84545'}}>ชนิดน้ำมัน : </Text>
+                    <Layout level='1' style={{ marginLeft: 5 }}>
                         <Select
                             value={displayValue}
                             selectedIndex={selectedIndex}
@@ -56,16 +65,28 @@ const displayValue = data[selectedIndex.row];
             </View>
       <View style={{ marginTop: 15 }}>
       <Image source={require('../assets/map.png')} style={{ width: 150, height: 150 }} />
+      <View style={[{ marginTop: 15 }, styles.row]}>
+        <Text style={styles.fontEngInputHeader}>จุดเริ่มต้น</Text>
+        <Input style={styles.calInput} onChangeText={text => setStart(text)} />
       </View>
-      <View style={{ marginTop: 15 }}>
+      <View style={[{ marginTop: 10 }, styles.row]}>
+        <Text style={styles.fontEngInputHeader}>ปลายทาง</Text>
+        <Input style={styles.calInput} onChangeText={text => setEnd(text)} />
+      </View>
+      </View>
+      <View style={[{ marginTop: 10 }, styles.row]}>
         <Text style={styles.fontEngInputHeader}>ระยะทาง</Text>
-        <Input style={styles.fontEngInput} onChangeText={text => setDistance(text)} />
+        <Input style={styles.calInput} onChangeText={text => setDistance(text)} />
       </View>
-      <Button style={[styles.fontEng, styles.buttonStyle, { margin: 15 }]} onPress={calculate}>{evaProps => <Text {...evaProps} style={{ color: "#ffffff", fontFamily: 'Kanit_400Regular', }}>คำนวณค่าน้ำมัน</Text>}</Button>
+      <View style={styles.row}>
+      <Button style={[styles.fontEng, styles.buttonStyle, { margin: 5 }]} onPress={calculate}>{evaProps => <Text {...evaProps} style={{ color: "#ffffff", fontFamily: 'Kanit_400Regular', }}>คำนวณค่าน้ำมัน</Text>}</Button>
+      <Button style={[styles.fontEng, styles.buttonStyle, { margin: 5 }]} onPress={saveLocation}>{evaProps => <Text {...evaProps} style={{ color: "#ffffff", fontFamily: 'Kanit_400Regular', }}>บันทึกเส้นทาง</Text>}</Button>
+      </View>
       
-      
-      <View style={{ marginTop: 15 }}>
-        <Text style={{ fontFamily: 'Kanit_400Regular', fontSize: 20, color: '#E84545' , fontWeight: 'bold'}}>ค่าน้ำมัน: </Text>
+      <View style={[{ marginTop: 15 }, styles.row]}>
+        <Text style={{ fontFamily: 'Kanit_400Regular', fontSize: 30, color: '#E84545' , fontWeight: 'bold'}}>ค่าน้ำมัน: </Text>
+        <Text style={{ fontFamily: 'Kanit_400Regular', fontSize: 30, color: '#E84545' , fontWeight: 'bold'}}> 50 </Text>
+        <Text style={{ fontFamily: 'Kanit_400Regular', fontSize: 30, color: '#E84545' , fontWeight: 'bold'}}> บาท </Text>
       </View>
     </View>
   );
@@ -104,7 +125,7 @@ const styles = StyleSheet.create({
     color: 'black',
     // backgroundColor: '#FFFFFF',
     borderRadius: '30px',
-    width: 80
+    width: 130
   },
   fontTh: {
     fontFamily: 'Kanit_400Regular',
@@ -115,7 +136,7 @@ const styles = StyleSheet.create({
     borderColor: 'transparent',
     borderWidth: 0,
     borderRadius: "9000px",
-    width: 200
+    width: 130
   },
   logo: {
     justifyContent: 'flex-start',
