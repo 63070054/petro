@@ -10,7 +10,6 @@ const convert = require("xml-js");
 const ShowOilPrice = ({ navigation, route }) => {
   const [oils, setOils] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState(new IndexPath(0));
-  console.log(route)
   useEffect(() => {
     const uri = "https://crmmobile.bangchak.co.th/webservice/oil_price.aspx"
     axios.get(uri).then(function (response) {
@@ -63,7 +62,7 @@ const ShowOilPrice = ({ navigation, route }) => {
         <Layout style={[styles.tabContainer]}>
           <View style={styles.containerCardparty}>
             <View style={[styles.row, { backgroundColor: '#c90076', height: '50px'}]}>
-              <View style={[styles.column1, { textAlign: 'center'}]}>
+              <View style={[{ textAlign: 'center'}]}>
                 <Text style={[styles.fontTh, { color: '#ffffff', fontSize: '16px' }]}>นํ้ามัน</Text>
               </View>
               <View style={[styles.column2]}>

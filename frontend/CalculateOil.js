@@ -6,7 +6,7 @@ import axios from 'axios';
 const convert = require("xml-js");
 
 
-const Calcu = () => {
+const Calcu = ({ navigation, route }) => {
   const [distance, setDistance] = useState(0);
   const [alert, setAlert] = useState('');
   const [selectedIndex, setSelectedIndex] = useState('');
@@ -17,18 +17,20 @@ const Calcu = () => {
   const [oils, setOils] = useState([]);
   const [visible, setVisible] = useState(false);
   const [oilSelectPrice, setOilSelectPrice] = useState('');
-  
+  const [inputRequire, setInputRequire] = useState(false);
+  const [saveFailed, setSaveFailed] = useState('');
+  const [saveSuccess, setSaveSuccess] = useState('');
+
 
 
   let [fontsLoaded] = useFonts({
     Kanit_400Regular
   });
 
-  const cal = async () => {
+  const calculate = async () => {
     if (selectedIndex) {
       axios.post(`http://127.0.0.1:8080/calculate`, { distance: distance, oil_Price: oils[selectedIndex.row].today._text, km_per_oil: kmPerOil })
         .then(function (response) {
-          console.log(response.data)
           setPrice(response.data)
         })
         .catch((err) => {
@@ -39,17 +41,16 @@ const Calcu = () => {
 
   const saveLocation = async () => {
     if (start && end && selectedIndex != '') {
-      axios.post(`http://127.0.0.1:8080/favRoute/${start}/${end}/${oils[selectedIndex].type._text}/${oils[selectedIndex].today._text}`)
+      axios.post(`http://127.0.0.1:8080/favRoute`,
+        { username: route.params.username, startName: start, destination: end, oil: oils[selectedIndex.row].type._text, distance: distance })
         .then(function (response) {
-          // setPrice(response.data)
-          console.log(response.data)
+          setSaveSuccess(true)
         })
         .catch((err) => {
           console.log(err);
         });
     } else {
-      console.log('wave')
-      // alert("ข้อมูลไม่ครบ");
+      setInputRequire(true)
     }
   }
 
@@ -88,16 +89,16 @@ const Calcu = () => {
       </View>
       <View style={[styles.row]}>
         <Text style={[{ marginRight: 15 }, styles.fontEngInputHeader]}>ระยะทาง</Text>
-        <Input style={[{ marginVertical: 20, width: 100}]} onChangeText={text => setDistance(text)} />
-        <Text style={[ styles.fontEngInputHeader, {marginLeft: 10}]}>KM</Text>
+        <Input style={[{ marginVertical: 20, width: 100 }]} onChangeText={text => setDistance(text)} />
+        <Text style={[styles.fontEngInputHeader, { marginLeft: 10 }]}>KM</Text>
       </View>
       <View style={[styles.row]}>
         <Text style={[{ marginRight: 20 }, styles.fontEngInputHeader]}>ใช้น้ำมัน</Text>
-        <Input style={[{marginVertical: 10, width: 100}]} onChangeText={text => setKmPerOil(text)} />
-        <Text style={[styles.fontEngInputHeader, {marginLeft: 10}]}>KM/L</Text>
+        <Input style={[{ marginVertical: 10, width: 100 }]} onChangeText={text => setKmPerOil(text)} />
+        <Text style={[styles.fontEngInputHeader, { marginLeft: 10 }]}>KM/L</Text>
       </View>
       <View style={[styles.row]}>
-        <Button style={[styles.fontEng, styles.buttonStyle, { margin: 15 }]} onPress={cal}>{evaProps => <Text {...evaProps} style={{ color: "#ffffff", fontFamily: 'Kanit_400Regular', }}>คำนวณค่าน้ำมัน</Text>}</Button>
+        <Button style={[styles.fontEng, styles.buttonStyle, { margin: 15 }]} onPress={calculate}>{evaProps => <Text {...evaProps} style={{ color: "#ffffff", fontFamily: 'Kanit_400Regular', }}>คำนวณค่าน้ำมัน</Text>}</Button>
         <Button style={[styles.fontEng, styles.buttonStyle, { margin: 15 }]} onPress={() => setVisible(true)}>{evaProps => <Text {...evaProps} style={{ color: "#ffffff", fontFamily: 'Kanit_400Regular', }}>บันทึกเส้นทาง</Text>}</Button>
       </View>
 
@@ -121,15 +122,54 @@ const Calcu = () => {
               <Text style={[styles.fontEngInputHeader]}>ปลายทาง   </Text>
               <Input style={{ width: 100 }} onChangeText={text => setEnd(text)} />
             </View>
-            <Button style={[styles.fontEng, styles.buttonStyle, { margin: 15 }]} onPress={() => setVisible(true)}>{evaProps => <Text {...evaProps} style={{ color: "#ffffff", fontFamily: 'Kanit_400Regular', }}>บันทึก</Text>}</Button>
+            <Button style={[styles.fontEng, styles.buttonStyle, { margin: 15 }]} onPress={saveLocation}>{evaProps => <Text {...evaProps} style={{ color: "#ffffff", fontFamily: 'Kanit_400Regular', }}>บันทึก</Text>}</Button>
           </View>
         </Card>
       </Modal>
-
+      <Modal
+        visible={inputRequire}
+        backdropStyle={styles.backdrop}
+        onBackdropPress={() => setInputRequire(false)}>
+        <Card style={[{ backgroundColor: "#ffffff" }]}>
+          <View style={styles.cardContainer}>
+            <View style={styles.ct}>
+              <Image source={require('../assets/danger.png')} style={{ width: 50, height: 50 }} />
+              <Text style={styles.cardText}>กรุณากรอกข้อมูลให้ครบ</Text>
+            </View>
+          </View>
+        </Card>
+      </Modal>
+      <Modal
+        visible={saveSuccess}
+        backdropStyle={styles.backdrop}
+        onBackdropPress={() => [setSaveSuccess(false), setVisible(false)]}>
+        <Card style={[{ backgroundColor: "#ffffff" }]}>
+          <View style={styles.cardContainer}>
+            <View style={styles.ct}>
+              <Image source={require('../assets/success.png')} style={{ width: 50, height: 50 }} />
+              <Text style={styles.cardText}>บันทึกสำเร็จ</Text>
+            </View>
+          </View>
+        </Card>
+      </Modal>
     </View>
   );
 };
 const styles = StyleSheet.create({
+  cardText: {
+    fontFamily: 'Kanit_400Regular',
+  },
+  ct: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center'
+  },
+  cardContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   container: {
     flex: 1,
     fontFamily: 'Kanit_400Regular',
